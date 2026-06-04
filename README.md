@@ -94,6 +94,20 @@ Each fragment includes a SHA-256 hash computed over:
 
 This ensures data integrity and immutability verification.
 
+## Local development (machine specs)
+
+- **Port: 5252**（machine/ports.md · 5xxx spiral universe）
+- 雙擊 `自動localhost.command` → `next dev -p 5252` → http://localhost:5252
+- `自動push.command` 接 machine/specs/01-deploy；遠端 repo 待建（建議 private）
+
+定位：spiral-core 的工程落地層。前端純工程功能、無 lore——運行核，不是敘事面。
+
+### 扶正紀錄 2026-06-04
+
+- git init + initial commit（main，52 files）
+- 移除 9 個檔案內共 18 段 `#region agent log` 調試注入（殘留的 127.0.0.1:7246 debug POST）
+- 接入 machine 01-deploy / 02-localhost 薄殼，ports.md 5252 已登記
+
 ## License
 
 MIT
