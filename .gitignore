@@ -33,3 +33,5 @@ yarn-error.log*
 /data/*.sqlite-wal
 /data/*.sqlite-shm
 
+.vercel
+.env*

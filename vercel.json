@@ -1,0 +1,16 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "spiral.ooo" }],
+      "destination": "https://record.spiral.ooo/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.spiral.ooo" }],
+      "destination": "https://record.spiral.ooo/:path*",
+      "permanent": true
+    }
+  ]
+}

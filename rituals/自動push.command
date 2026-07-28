@@ -1,11 +1,9 @@
 #!/bin/bash
-# spiral-record · push 薄殼
-# 遠端 repo 尚未建（建議 private）。建好後執行：
-#   git remote add origin git@github.com:recdnd/spiral-record.git
+# spiral-record · push 薄殼（接 machine/specs/01-deploy.md）
+# 本檔放在 <project>/rituals/ 內
 
 REC_PROJECT="spiral-record"
-REC_DEPLOY_URL=""
-REC_REBASE=0  # 沒 remote 時跳過 rebase
+REC_DEPLOY_URL="https://record.spiral.ooo"
 
 REC_PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 _d="$REC_PROJECT_DIR"

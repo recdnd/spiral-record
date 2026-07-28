@@ -2,7 +2,9 @@ import Database from 'better-sqlite3';
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
-const DB_DIR = join(process.cwd(), 'data');
+const DB_DIR = process.env.VERCEL
+  ? join('/tmp', 'spiral-record-data')
+  : join(process.cwd(), 'data');
 const DB_PATH = join(DB_DIR, 'spiral-record.sqlite');
 
 // Ensure data directory exists
