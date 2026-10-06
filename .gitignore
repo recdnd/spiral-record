@@ -38,3 +38,5 @@ yarn-error.log*
 /data/
 .fuse_hidden*
 tsconfig.tsbuildinfo
+snapshot/*-wal
+snapshot/*-shm
