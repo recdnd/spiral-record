@@ -12,8 +12,12 @@ import {
   computeMetaHash,
 } from '@/lib/utils';
 import { revalidatePath } from 'next/cache';
+import { IS_READ_ONLY, READ_ONLY_MESSAGE } from '@/lib/readonly';
 
 export async function POST(req: NextRequest) {
+  if (IS_READ_ONLY) {
+    return NextResponse.json({ error: READ_ONLY_MESSAGE }, { status: 403 });
+  }
   try {
     const formData = await req.formData();
     

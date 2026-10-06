@@ -14,8 +14,12 @@ import {
 } from '@/lib/utils';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { IS_READ_ONLY, READ_ONLY_MESSAGE } from '@/lib/readonly';
 
 export async function createFragment(formData: FormData) {
+  if (IS_READ_ONLY) {
+    return { error: READ_ONLY_MESSAGE };
+  }
   const module = normalizeModule(formData.get('module')?.toString() || 'anon');
   const type = normalizeType(formData.get('type')?.toString() || 'note');
   const content = normalizeContent(formData.get('content')?.toString() || '');
@@ -69,6 +73,9 @@ export async function createFragment(formData: FormData) {
 }
 
 export async function sealFragment(id: string, formData: FormData) {
+  if (IS_READ_ONLY) {
+    return { error: READ_ONLY_MESSAGE };
+  }
   const db = getDb();
   const fragment = db.prepare('SELECT * FROM fragments WHERE id = ?').get(id) as any;
 
@@ -106,6 +113,9 @@ export async function sealFragment(id: string, formData: FormData) {
 }
 
 export async function addTraces(fromId: string, traceIds: string[]) {
+  if (IS_READ_ONLY) {
+    return { error: READ_ONLY_MESSAGE };
+  }
   const db = getDb();
   
   // Validate fragment exists

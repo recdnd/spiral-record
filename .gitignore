@@ -35,3 +35,6 @@ yarn-error.log*
 
 .vercel
 .env*
+/data/
+.fuse_hidden*
+tsconfig.tsbuildinfo

@@ -1,15 +1,19 @@
 import Database from 'better-sqlite3';
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
+import { IS_READ_ONLY } from './readonly';
 
-const DB_DIR = process.env.VERCEL
-  ? join('/tmp', 'spiral-record-data')
-  : join(process.cwd(), 'data');
-const DB_PATH = join(DB_DIR, 'spiral-record.sqlite');
+// 可寫核心：./data（本機）。唯讀部署：build 時烘入的快照（npm run snapshot 產生）。
+const DB_PATH = IS_READ_ONLY
+  ? join(process.cwd(), 'snapshot', 'spiral-record.sqlite')
+  : join(process.cwd(), 'data', 'spiral-record.sqlite');
 
-// Ensure data directory exists
-if (!existsSync(DB_DIR)) {
-  mkdirSync(DB_DIR, { recursive: true });
+// Ensure data directory exists (write mode only)
+if (!IS_READ_ONLY) {
+  const dir = join(process.cwd(), 'data');
+  if (!existsSync(dir)) {
+    mkdirSync(dir, { recursive: true });
+  }
 }
 
 let db: Database.Database | null = null;
@@ -19,9 +23,15 @@ export function getDb(): Database.Database {
     return db;
   }
 
+  if (IS_READ_ONLY) {
+    // 唯讀快照：不建表、不遷移、不設 WAL（readonly 檔案系統上都會炸）
+    db = new Database(DB_PATH, { readonly: true, fileMustExist: true });
+    return db;
+  }
+
   db = new Database(DB_PATH);
   db.pragma('journal_mode = WAL');
-  
+
   // Initialize tables
   db.exec(`
     CREATE TABLE IF NOT EXISTS fragments (

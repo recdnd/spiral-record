@@ -1,6 +1,8 @@
 import { HomeForm } from './HomeForm';
 import { LanguageToggle } from './LanguageToggle';
 import { HomeContent } from './HomeContent';
+import { IS_READ_ONLY } from '@/lib/readonly';
+import { RegistryGate } from './RegistryGate';
 
 export default function HomePage() {
   return (
@@ -14,7 +16,11 @@ export default function HomePage() {
 
       <HomeContent />
 
-      <HomeForm />
+      {/* 進入後建倉：倉在訪客自己的瀏覽器裡 */}
+      <RegistryGate />
+
+      {/* 本機可寫實例仍保留伺服器側表單（Rec 自用） */}
+      {!IS_READ_ONLY && <HomeForm />}
     </div>
   );
 }

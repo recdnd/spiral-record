@@ -2,6 +2,7 @@ import { getDb } from '@/lib/db';
 import { addTraces } from '@/app/actions';
 import { escapeHtml } from '@/lib/utils';
 import { ensureWitness } from '@/lib/witness';
+import { IS_READ_ONLY } from '@/lib/readonly';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { FragmentForm } from './FragmentForm';
@@ -33,14 +34,19 @@ export default function FragmentPage({ params, searchParams }: FragmentPageProps
   }
 
   // Create witness record if it doesn't exist (race-safe)
+  // 唯讀部署：不產生新見證，只顯示快照裡既有的
   let witness: any;
   let isNew: boolean;
-  try {
+  if (IS_READ_ONLY) {
+    witness =
+      db
+        .prepare('SELECT * FROM witnesses WHERE fragment_id = ?')
+        .get(fragmentIdUpper) ?? null;
+    isNew = false;
+  } else {
     const result = ensureWitness(fragmentIdUpper, fragment.hash);
     witness = result.witness;
     isNew = result.isNew;
-  } catch (error: any) {
-    throw error;
   }
 
   const outboundTraces = db

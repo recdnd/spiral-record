@@ -48,6 +48,30 @@ Data is persisted in a local SQLite file: `./data/spiral-record.sqlite`
 
 The database is automatically initialized on first run.
 
+## Deployment Model（2026-07-29 拍板，二輪修訂）
+
+**record.spiral.ooo = 線上應用門面：進入後建倉。**
+
+每個訪客的登記簿存在**自己瀏覽器**的 IndexedDB 裡（`lib/client/`）——寫入永遠發生在擁有磁碟的人手上，零帳號、零後端持久、零 SQL 服務。完整性邏輯（canonical / hash / seal / witness）與伺服器版逐字對齊，Web Crypto 實作，`Verify` 客戶端可重算。支援匯出（hash-verified JSON）與匯入（僅空倉，append-only 律）。
+
+- `/` — 門面 + RegistryGate（無倉建倉、有倉入倉）
+- `/my` — 你的倉：提交 / feed / 匯出匯入
+- `/my/f/<id>` — fragment 視圖：payload / verify / seal / trace / witness
+- 代價（誠實承認）：無全域公共 feed，各倉互不可見；換瀏覽器＝另一個倉（用匯出/匯入遷移）
+
+**伺服器側 SQLite 仍在**，供本機可寫實例（`npm run dev`）使用；線上部署時為唯讀快照（見下），`/feed` 等舊路徑照常服務。
+
+### 唯讀快照（伺服器側，過渡自一輪修訂）
+
+Vercel serverless 的 /tmp 短命且每實例一份——不可逆登記簿放上面等於承諾不可逆、實際保證失憶。因此：
+
+- 部署偵測到 `VERCEL`（或 `REC_READ_ONLY=1`）即進唯讀模式：開 `snapshot/spiral-record.sqlite`（readonly）、submit/seal/trace/witness 全部拒絕、首頁表單換成告示。
+- 更新線上內容的儀式：本地寫 → `npm run snapshot`（checkpoint WAL + 烘快照）→ commit `snapshot/` → push → Vercel 重建。
+
+### Turso TODO（日後若要線上可寫）
+
+既定待辦：db 層換 [Turso](https://turso.tech)（libSQL，SQLite 相容）即可線上真持久。代價是第三方依賴 + 開帳號。在家族真的需要「外人可線上提交」之前不做。
+
 ## Project Structure
 
 ```

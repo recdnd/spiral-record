@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "seed": "tsx scripts/seed.ts",
+    "snapshot": "tsx scripts/snapshot.ts",
     "test": "vitest",
     "test:watch": "vitest --watch"
   },
