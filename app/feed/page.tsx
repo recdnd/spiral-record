@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { getDb } from '@/lib/db';
 import Link from 'next/link';
 import { escapeHtml } from '@/lib/utils';
@@ -18,6 +19,8 @@ type FragmentWithMeta = {
   witnessed: number;
   out_traces: number;
 };
+
+export const metadata: Metadata = { alternates: { canonical: '/feed' } };
 
 export default function FeedPage({ searchParams }: FeedProps) {
   const db = getDb();

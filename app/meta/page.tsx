@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { getDb } from '@/lib/db';
 import Link from 'next/link';
 
@@ -8,6 +9,8 @@ type MetaAuditRow = {
   fragment_id: string | null;
   directive: string;
 };
+
+export const metadata: Metadata = { alternates: { canonical: '/meta' } };
 
 export default function MetaPage() {
   const db = getDb();
